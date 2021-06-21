@@ -1,22 +1,80 @@
 <html>
-   <head>
-      <title>VueJs Introduction</title>
-      <script type = "text/javascript" src = "vue.js"></script>
-   </head>
-   <body>
-      <div id = "intro" style = "text-align:center;">
-         <h1>{{ message }}</h1>
-         <h2> {{ hello }} </h2>
-      </div>
-      <script type = "text/javascript">
-         var vue_det = new Vue({
-            el: '#intro',
-            data: {
-               message: 'My first VueJS Task',
-               hello: 'Xin chao!'
-            }
-         });
-      </script>
-      <a href="vue.js"> <button>NEW</button></a>
-   </body>
+
+<head>
+   <title>VueJs Introduction</title>
+   <script type="text/javascript" src="vue.js"></script>
+   <script>
+
+   </script>
+   <script>
+      function get() {
+         var link = document.getElementById('input').value
+         // console.log(link)
+         fetch(link)
+            .then(response => response.json())
+            .then(data => {
+               // console.log(data)
+               vue_data.data = JSON.stringify(data, null, '  ')
+               // console.log(vue_data.data)
+            })
+            .catch((error) => {
+               console.error('Error:', error);
+            });
+      }
+   </script>
+   <style>
+      div {
+         text-align: center;
+      }
+
+      input {
+         font-size: 18px;
+      }
+
+      textarea {
+         font-size: 18px;
+      }
+   </style>
+</head>
+
+<body>
+   <div id="intro">
+      <h1>{{ message }}</h1>
+      <h2> {{ hello }} </h2>
+   </div>
+   <script type="text/javascript">
+      var vue_det = new Vue({
+         el: '#intro',
+         data: {
+            message: 'My first VueJS Task',
+            hello: 'Xin chào!'
+         }
+      });
+   </script>
+   <div>
+      <input type="text" id="input" size="80" placeholder="Link API to fetch data from">
+   </div>
+   <br>
+   <div>
+      <input type="button" onclick="get()" value="GET">
+   </div>
+   <br>
+   <div id="output">
+      <!-- <pre>
+         <code>
+            {{ data }}
+         </code>
+      </pre> -->
+      <textarea id="result" v-bind:value="data" rows="20" cols="80"></textarea>
+   </div>
+   <script>
+      var vue_data = new Vue({
+         el: '#output',
+         data: {
+            data: 'NULL'
+         }
+      });
+   </script>
+</body>
+
 </html>
