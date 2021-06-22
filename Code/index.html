@@ -7,19 +7,89 @@
 
    </script>
    <script>
+      function change() {
+         document.getElementById("button").value = document.getElementById("select").value
+         vue_method.method = document.getElementById("select").value
+      }
       function get() {
          var link = document.getElementById('input').value
          // console.log(link)
-         fetch(link)
-            .then(response => response.json())
-            .then(data => {
-               // console.log(data)
-               vue_data.data = JSON.stringify(data, null, '  ')
-               // console.log(vue_data.data)
+         if (vue_method.method == "GET") {
+            fetch(link)
+               .then(response => response.json())
+               .then(data => {
+                  // console.log(data)
+                  vue_data.data = JSON.stringify(data, null, '  ')
+                  // console.log(vue_data.data)
+               })
+               .catch((error) => {
+                  console.error('Error:', error);
+               });
+         }
+
+         if (vue_method.method == "POST") {
+            fetch(link, {
+               method: 'POST', // *GET, POST, PUT, DELETE, etc.
+               mode: 'cors', // no-cors, *cors, same-origin
+               cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+               credentials: 'same-origin', // include, *same-origin, omit
+               headers: {
+                  "Access-Control-Allow-Headers": "*",
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               redirect: 'follow', // manual, *follow, error
+               referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+               body: document.getElementById("post").value,
             })
-            .catch((error) => {
-               console.error('Error:', error);
-            });
+               .then(response => response.json())
+               .then(data => {
+                  console.log('Success:', data);
+                  vue_data.data = JSON.stringify(data, null, '  ')
+               })
+               .catch((error) => {
+                  console.error('Error:', error);
+               });
+         }
+
+         if (vue_method.method == "PUT") {
+            fetch(link, {
+               method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+               mode: 'cors', // no-cors, *cors, same-origin
+               cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+               credentials: 'same-origin', // include, *same-origin, omit
+               headers: {
+                  "Access-Control-Allow-Headers": "*",
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+               },
+               redirect: 'follow', // manual, *follow, error
+               referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+               body: document.getElementById("put").value,
+            })
+               .then(response => response.json())
+               .then(data => {
+                  console.log('Success:', data);
+                  vue_data.data = JSON.stringify(data, null, '  ')
+               })
+               .catch((error) => {
+                  console.error('Error:', error);
+               });
+         }
+
+         if (vue_method.method == "DELETE") {
+            fetch(link, {
+               method: 'DELETE', // *GET, POST, PUT, DELETE, etc.
+            })
+               .then(response => response.json())
+               .then(data => {
+                  console.log('Success:', data);
+                  vue_data.data = JSON.stringify(data, null, '  ')
+               })
+               .catch((error) => {
+                  console.error('Error:', error);
+               });
+         }
       }
    </script>
    <style>
@@ -32,6 +102,10 @@
       }
 
       textarea {
+         font-size: 18px;
+      }
+
+      select {
          font-size: 18px;
       }
    </style>
@@ -47,7 +121,7 @@
          el: '#intro',
          data: {
             message: 'My first VueJS Task',
-            hello: 'Xin chào!'
+            hello: 'Fetch Data form API'
          }
       });
    </script>
@@ -55,9 +129,31 @@
       <input type="text" id="input" size="80" placeholder="Link API to fetch data from">
    </div>
    <br>
-   <div>
-      <input type="button" onclick="get()" value="GET">
+   <div id="method">
+      <select id="select" onchange="change()">
+         <option value="GET"> GET </option>
+         <option value="POST"> POST </option>
+         <option value="PUT"> PUT </option>
+         <option value="DELETE"> DELETE </option>
+      </select>
+      <input type="button" id="button" onclick="get()" value="GET">
+      <br>
+      <textarea id="post" v-if="method=='POST'" placeholder="POST data" rows="6" cols="80"></textarea>
+      <textarea id="put" v-if="method=='PUT'" placeholder="PUT data" rows="6" cols="80"></textarea>
    </div>
+   <script type="text/javascript">
+      var vue_method = new Vue({
+         el: '#method',
+         data: {
+            method: 'GET'
+         },
+         methods: {
+            change_method: function () {
+               return this.method = document.getElementById("select").value
+            }
+         }
+      });
+   </script>
    <br>
    <div id="output">
       <!-- <pre>
@@ -65,13 +161,13 @@
             {{ data }}
          </code>
       </pre> -->
-      <textarea id="result" v-bind:value="data" rows="20" cols="80"></textarea>
+      <textarea id="result" v-bind:value="data" rows="12" cols="80" disabled></textarea>
    </div>
    <script>
       var vue_data = new Vue({
          el: '#output',
          data: {
-            data: 'NULL'
+            data: 'Data from API'
          }
       });
    </script>
